@@ -1,15 +1,17 @@
 import express from "express";
 import axios from "axios";
+import cors from "cors";
+
 const app = express();
 
-// Middleware to handle CORS (you can configure it for your app)
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  next();
-});
+// Use the cors middleware to accept all origins
+app.use(cors());
 app.use(express.json());
+
+app.get('/call', async (req,res,next)=>{
+    console.log("calling");
+    
+})
 
 app.post("/flag", async (req, res, next) => {
   console.log(req.body.flag);
@@ -73,6 +75,19 @@ app.post("/flag", async (req, res, next) => {
     // throw error;
   }
 });
+
+
+
+setInterval(() => {
+    axios
+      .get("http://localhost:4001/call")
+      .then((response) => {
+        console.log("Response from /call:", response.data);
+      })
+      .catch((error) => {
+        console.error("Error calling /call:", error.message);
+      });
+  }, 90000); // 10000ms = 10 seconds
 
 app.listen(4001, () => {
   console.log("Server running on http://localhost:4001");
